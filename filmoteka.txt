@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+class Film {
+public:
+
+    Film(const std::string& title, const std::string& director, int releaseYear, bool available, const std::string& category)
+        : title(title), director(director), releaseYear(releaseYear), available(available), category(category) {}
+
+    void display() const {
+        std::cout << "Film: " << title << "\nDirector: " << director
+                  << "\nRelease Year: " << releaseYear << "\nCategory: " << category
+                  << "\nStatus: " << (available ? "Available" : "Not Available") << "\n";
+    }
+
+    std::string getTitle() const {
+        return title;
+    }
+
+    bool isAvailable() const {
+        return available;
+    }
+
+    void rentFilm() {
+        if (available) {
+            available = false;
+            std::cout << "Film rented successfully.\n";
+        } else {
+            std::cout << "Film is not available for rent.\n";
+        }
+    }
+
+    void returnFilm() {
+        available = true;
+        std::cout << "Film returned.\n";
+    }
+
+private:
+
+    std::string title;
+    std::string director;
+    int releaseYear;
+    bool available;
+    std::string category;
+};
+
+class VideoRental {
+public:
+
+    void addFilm(const Film& film) {
+        films.push_back(film);
+    }
+
+    void displayInventory() const {
+        std::cout << "Film Inventory:\n";
+        for (const auto& film : films) {
+            film.display();
+            std::cout << "-------------\n";
+        }
+    }
+
+    void rentFilm(const std::string& filmTitle) {
+        for (auto& film : films) {
+            if (film.getTitle() == filmTitle) {
+                film.rentFilm();
+                return;
+            }
+        }
+        std::cout << "Film not found in the inventory.\n";
+    }
+
+    void returnFilm(const std::string& filmTitle) {
+        for (auto& film : films) {
+            if (film.getTitle() == filmTitle) {
+                film.returnFilm();
+                return;
+            }
+        }
+        std::cout << "Film not found in the inventory.\n";
+    }
+
+	private:
+
+    std::vector<Film> films;
+};
+
+int main() {
+
+    Film film1("The Shawshank Redemption", "Frank Darabont", 1994, true, "Drama");
+    Film film2("The Godfather", "Francis Ford Coppola", 1972, true, "Crime");
+    Film film3("The Lord of the Rings: The Fellowship of the Ring", "Peter Jackson", 2001, false, "Fantasy");
+
+    VideoRental rental;
+    rental.addFilm(film1);
+    rental.addFilm(film2);
+    rental.addFilm(film3);
+
+    rental.displayInventory();
+
+    rental.rentFilm("The Shawshank Redemption");
+    rental.returnFilm("The Lord of the Rings: The Fellowship of the Ring");
+
+    rental.displayInventory();
+    return 0;
+}
